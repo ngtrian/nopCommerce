@@ -341,11 +341,17 @@ namespace Nop.Web.Controllers
 
             var models = (await _productModelFactory.PrepareProductOverviewModelsAsync(products, false, _catalogSettings.ShowProductImagesInSearchAutoComplete, _mediaSettings.AutoCompleteSearchThumbPictureSize)).ToList();
             var result = (from p in models
+                          let productCategory = _categoryService.GetProductCategoriesByProductIdAsync(p.Id)?.Result.FirstOrDefault()
+                          let category = _categoryService.GetCategoryByIdAsync(productCategory?.CategoryId ?? 0).Result
+                          //only display category mapping product for first search result
+                          let first = p == models.First()
                           select new
                           {
                               label = p.Name,
                               producturl = Url.RouteUrl("Product", new { SeName = p.SeName }),
                               productpictureurl = p.DefaultPictureModel.ImageUrl,
+                              price = p.ProductPrice.Price,
+                              cat = (category != null && first) ? _categoryService.GetFormattedBreadCrumbAsync(category).Result : "",
                               showlinktoresultsearch = showLinkToResultSearch
                           })
                 .ToList();
