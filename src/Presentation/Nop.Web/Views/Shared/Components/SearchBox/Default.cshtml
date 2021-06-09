@@ -48,9 +48,11 @@
                         showLinkToResultSearch = item.showlinktoresultsearch;
                         //html encode
                         t = htmlEncode(t);
+                        var price = htmlEncode(item.price);
+                        var cat = htmlEncode(item.cat);
                         return $("<li></li>")
                             .data("item.autocomplete", item)
-                            .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"'>") : null)<span>" + t + "</span></a>")
+                            .append("<a>@(Model.ShowProductImagesInSearchAutoComplete ? Html.Raw("<img src='\" + item.productpictureurl + \"'>") : null)<span>" + t + "<p class='price'>" + price + "</strong>" + "<p class='category'>" + cat + "</p></span></a>")
                             .appendTo(ul);
                     };
                 });
